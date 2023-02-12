@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     main: './src/scripts/main.js',
+    gameboard: './src/scripts/gameboard.js',
 },
   output: {
     filename: '[name].bundle.js',
