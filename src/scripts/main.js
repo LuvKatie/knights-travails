@@ -11,22 +11,35 @@ function possibleMoves(pos) {
     // This also accounts for the 4 possible variations of -2 and 2 in y of [x, y]
     ones.forEach(num => {
         for (let i = 0; i < 2; i++) {
-            let newMove = [num + pos[0], twos[i] + pos[1]];
-            moves.push(newMove);
+            let x = num + pos[0];
+            let y = twos[i] + pos[1];
+
+            if(x > 7 || y > 7) {
+                return;
+            } else {
+                let newMove = [x, y];
+                moves.push(newMove);
+            }
         }
     });
-    // Calculate remaining half of moves involving -2 and 2 for x in [x, y]
-    // plus -1 and 1 in y of [x, y]
+
     twos.forEach(num => {
         for (let i = 0; i < 2; i++) {
-            let newMove = [num + pos[0], ones[i] + pos[1]];
-            moves.push(newMove);
+            let x = num + pos[0];
+            let y = ones[i] + pos[1];
+
+            if(x > 7 || y > 7) {
+                return;
+            } else {
+                let newMove = [x, y];
+                moves.push(newMove);
+            }
         }
     });
 
     return moves;
 }
 
-let test = possibleMoves([3, 3]);
+let test = possibleMoves([6, 3]);
 
 console.log(test)
