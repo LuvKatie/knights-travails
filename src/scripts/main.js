@@ -49,29 +49,41 @@ class Knight {
         return moves;
     }
 
-    appendMoves(pos, node = this, counter = -1) {
-        let moves = this.possibleMoves(pos);
-
-        if (counter == 3) {
-            return;
-        }
+    appendMoves(pos) {
+        let moves = this.possibleMoves(pos.position);
         
-        console.log("position", pos)
-        console.log(moves)
-
-        let i = moves.length - 1;
-        while(i >= 0) {
-            node[`move${i}`] = new createMoves(moves[i]);
-            i--
+        for (let i = moves.length - 1; i >= 0; i--) {
+            pos[`move${i}`] = new createMoves(moves[i]);
         }
+    }
 
-        console.log("node", node)
-        
-        counter++
+    // Takes given position and appends all moves to its children
+    childMoves(node) {
+        console.log(node);
 
-        if (counter < 3) {
-            return this.appendMoves(pos[`move${counter}`].position, node[`move${counter}`], counter);
+        for(let i = 0; i < 8; i++) {
+            if(node[`move${i}`] !== undefined) {
+                this.appendMoves(node[`move${i}`]);
+            } else {
+                return;
+            }
         }
+    }
+
+    // Use this function in conjunction with appendMoves and childMoves to create 3-4 level depth of moves
+    moveTree() {
+        this.appendMoves(this);
+        this.childMoves(this);
+
+        // this.move0.move0 will look like
+        // this.move0 = [6,3], this.move0.move0 = [5,1]
+        // and appendMoves made [5,1] or this.move0.move0 discover its moves
+        // childMoves gave [5,1]'s children or this.move0.move0's moves their moves as well!
+        // It is definitely working review this pseudo code and come back tomorrow to push more
+        this.appendMoves(this.move0.move0);
+        this.childMoves(this.move0.move0);
+
+        console.log(this.move0)
     }
 }
 
@@ -88,9 +100,9 @@ class createMoves {
         this.move7 = move7;
     }
 }
-// Calculate possible moves of a position on our chessboard with a given array of 2 positions ex. [3, 3]
 
 let test = new Knight([7, 1], [3, 3], [7, 1]);
 let test2 = new createMoves();
 
-test.appendMoves([7, 1]);
+test.moveTree();
+
