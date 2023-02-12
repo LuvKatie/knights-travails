@@ -35,8 +35,6 @@ class Knight {
                 let x = num + pos[0];
                 let y = secondArr[i] + pos[1];
 
-                console.log(x)
-                console.log(y)
     
                 // Prevents Knight from moving outside of our 8x8 board
                 if(x > 7 || y > 7 || x < 0 || y < 0) {
@@ -51,24 +49,29 @@ class Knight {
         return moves;
     }
 
-    appendMoves(pos, node = this, counter = 0) {
-        console.log(test);
-        if(counter >= 3 || pos == undefined) {
-            return;
-        }
-
+    appendMoves(pos, node = this, counter = -1) {
         let moves = this.possibleMoves(pos);
 
-        for (let i = 0; i < moves.length; i++) {
+        if (counter == 3) {
+            return;
+        }
+        
+        console.log("position", pos)
+        console.log(moves)
+
+        let i = moves.length - 1;
+        while(i >= 0) {
             node[`move${i}`] = new createMoves(moves[i]);
+            i--
         }
 
+        console.log("node", node)
+        
         counter++
-        console.log(pos)
-        console.log(node)
 
-        return this.appendMoves(pos = node[`move${counter + 1}`].position, node = node[`move${counter + 1}`], counter);
-
+        if (counter < 3) {
+            return this.appendMoves(pos = this[`move${counter}`].position, node = this[`move${counter}`], counter);
+        }
     }
 }
 
@@ -87,8 +90,7 @@ class createMoves {
 }
 // Calculate possible moves of a position on our chessboard with a given array of 2 positions ex. [3, 3]
 
-let test = new Knight([0, 0], [3, 3], [0, 0]);
+let test = new Knight([7, 1], [3, 3], [7, 1]);
 let test2 = new createMoves();
 
 test.appendMoves([7, 1]);
-console.log(test);
