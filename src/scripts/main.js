@@ -84,6 +84,8 @@ class Knight {
         this.childMoves(this.move0.move0);
 
         console.log(this.move0)
+
+        // Figure out how to recursively call these methods to create a 4-5 depth of moves
     }
 }
 
