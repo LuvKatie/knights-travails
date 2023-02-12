@@ -70,7 +70,7 @@ class Knight {
         counter++
 
         if (counter < 3) {
-            return this.appendMoves(pos = this[`move${counter}`].position, node = this[`move${counter}`], counter);
+            return this.appendMoves(pos[`move${counter}`].position, node[`move${counter}`], counter);
         }
     }
 }
