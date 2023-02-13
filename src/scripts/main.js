@@ -59,7 +59,6 @@ class Knight {
 
     // Takes given position and appends all moves to its children
     childMoves(node) {
-        console.log(node);
 
         for(let i = 0; i < 8; i++) {
             if(node[`move${i}`] !== undefined) {
@@ -71,21 +70,34 @@ class Knight {
     }
 
     // Use this function in conjunction with appendMoves and childMoves to create 3-4 level depth of moves
-    moveTree() {
-        this.appendMoves(this);
-        this.childMoves(this);
+    makeTree(node, depth, counter = -1, moves = this.possibleMoves(node.position).length) {
+        if (counter == depth) {
+            return;
+        }
 
-        // this.move0.move0 will look like
-        // this.move0 = [6,3], this.move0.move0 = [5,1]
-        // and appendMoves made [5,1] or this.move0.move0 discover its moves
-        // childMoves gave [5,1]'s children or this.move0.move0's moves their moves as well!
-        // It is definitely working review this pseudo code and come back tomorrow to push more
-        this.appendMoves(this.move0.move0);
-        this.childMoves(this.move0.move0);
+        // Moves become reassigned a length value for our for loop to
+        // discover the correct amount of moves within our ' node ' variable
+        moves = this.possibleMoves(node.position).length;
 
-        console.log(this.move0)
+        console.log(moves);
+        
+        if (counter < 0) {
+            this.appendMoves(node);
+            this.childMoves(node);
+        }
 
-        // Figure out how to recursively call these methods to create a 4-5 depth of moves
+        for (let i = 0; i < moves; i++) {
+            this.appendMoves(node[`move${i}`]);
+            this.childMoves(node[`move${i}`]);
+        }
+
+        counter++
+        if (counter < moves) {
+            // Recursively calls on each move of our initial start position.
+            // Counter is responsible for recursing until our descired depth
+            return this.makeTree(node = test[`move${counter}`], depth, counter, moves);
+        }
+
     }
 }
 
@@ -106,5 +118,6 @@ class createMoves {
 let test = new Knight([7, 1], [3, 3], [7, 1]);
 let test2 = new createMoves();
 
-test.moveTree();
+test.makeTree(test, 3);
+console.log(test)
 
