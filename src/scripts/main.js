@@ -51,10 +51,13 @@ class Knight {
 
     appendMoves(pos) {
         let moves = this.possibleMoves(pos.position);
-        
-        for (let i = moves.length - 1; i >= 0; i--) {
+
+        for (let i = 0; i < moves.length; i++) {
             pos[`move${i}`] = new createMoves(moves[i]);
         }
+
+        // This is the last of the line and pos[`move${i}`] is basically the end of our tree
+        // We need to find a way to continue this side of things to add onto our tree
     }
 
     // Takes given position and appends all moves to its children
@@ -68,36 +71,30 @@ class Knight {
             }
         }
     }
-
+    
     // Use this function in conjunction with appendMoves and childMoves to create 3-4 level depth of moves
-    makeTree(node, depth, counter = -1, moves = this.possibleMoves(node.position).length) {
-        if (counter == depth) {
-            return;
-        }
+    makeTree(node, depth, counter = -1, moves) {
+        
 
+        moves = this.possibleMoves(node.position).length;
+        
         // Moves become reassigned a length value for our for loop to
         // discover the correct amount of moves within our ' node ' variable
-        moves = this.possibleMoves(node.position).length;
-
-        console.log(moves);
-        
-        if (counter < 0) {
+        if (counter < depth) {
             this.appendMoves(node);
             this.childMoves(node);
         }
-
+        
         for (let i = 0; i < moves; i++) {
-            this.appendMoves(node[`move${i}`]);
             this.childMoves(node[`move${i}`]);
         }
 
         counter++
-        if (counter < moves) {
+
+        if (counter < depth) {
             // Recursively calls on each move of our initial start position.
-            // Counter is responsible for recursing until our descired depth
             return this.makeTree(node = test[`move${counter}`], depth, counter, moves);
         }
-
     }
 }
 
@@ -118,6 +115,7 @@ class createMoves {
 let test = new Knight([7, 1], [3, 3], [7, 1]);
 let test2 = new createMoves();
 
-test.makeTree(test, 3);
+let depth = test.possibleMoves(test.position).length;
+test.makeTree(test, depth);
 console.log(test)
 
