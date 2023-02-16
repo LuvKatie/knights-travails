@@ -98,31 +98,42 @@ class Knight {
         return this.makeTree(node = test[`move${counter}`], moves, counter);
     }
 
-    findShortest(start, end, depth, counter = 0, stepCompare) {
-        if (counter >= depth) {
+    findShortest(start, end, depth, counter = 0, allMoves = [], shortestMoves = []) {
+        if (counter == depth) {
             return;
         }
         
-        
         let moveString = this.possibleMoves(end.position).join(' ');
         let newMoves = moveString.split(" ");
+        
         if (newMoves.includes(start.position[0] + ',' + start.position[1])) {
-            console.log(start.position[0] + ',' + start.position[1]);
-            stepCompare = this.checkSteps(start);
-            if (stepCompare !== undefined) {
-                console.log("Step 1: ", stepCompare)
-                console.log("Step 2: ", this.checkSteps(start))
-            }
+            allMoves.push(this.checkSteps(start));
+            allMoves.sort((a, b) => {
+                return a.length - b.length;
+            });
+            allMoves.forEach(move => {
+                if (move.length == move[0].length) {
+                    if (shortestMoves.includes(move)) {
+                        return;
+                    }
+                    shortestMoves.push(move);
+                    console.log(shortestMoves);
+                    console.log(end.position);
+                } else {
+                    return;
+                }
+            });
         }
-
         
-        counter++
         
-        for (let i = 0; i < 8; i++) {
-            if (start[`move${i}`] !== undefined) {
-                this.findShortest(start[`move${i}`], end, depth, counter, stepCompare);
-            } else {
-                return;
+        if (counter < depth) {
+            counter++
+            for (let i = 0; i < 8; i++) {
+                if (start[`move${i}`] !== undefined) {
+                    this.findShortest(start[`move${i}`], end, depth, counter, allMoves, shortestMoves);
+                } else {
+                    return;
+                }
             }
         }
     }
@@ -161,5 +172,5 @@ test2.appendMoves(test2, 1);
 
 console.log(test)
 console.log(test2.possibleMoves(test2.position));
-test2.findShortest(test, test2, 5)
+test2.findShortest(test, test2, 5);
 
