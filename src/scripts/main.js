@@ -169,6 +169,6 @@ target.findShortest(startTree, target, 5);
 
 console.log("Start position: ", startTree.position);
 console.log("Target position: ", target.position);
-console.log(target.possibleMoves(target.position));
-console.log(target.path);
+console.log("Target's possible moves: ", target.possibleMoves(target.position));
+console.log("Shortest paths: ", target.path);
 
