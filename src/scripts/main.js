@@ -49,11 +49,21 @@ class Knight {
         return moves;
     }
 
-    appendMoves(pos) {
+    appendMoves(pos, counter = 0) {
+        if (counter >= 3) {
+            return;
+        }
+
         let moves = this.possibleMoves(pos.position);
+
+        counter++
 
         for (let i = 0; i < moves.length; i++) {
             pos[`move${i}`] = new createMoves(moves[i]);
+
+            if(pos[`move${i}`].move0 == undefined) {
+                this.appendMoves(pos[`move${i}`], counter);
+            }
         }
 
         // This is the last of the line and pos[`move${i}`] is basically the end of our tree
@@ -62,7 +72,6 @@ class Knight {
 
     // Takes given position and appends all moves to its children
     childMoves(node) {
-
         for(let i = 0; i < 8; i++) {
             if(node[`move${i}`] !== undefined) {
                 this.appendMoves(node[`move${i}`]);
@@ -70,6 +79,7 @@ class Knight {
                 return;
             }
         }
+
     }
     
     // Use this function in conjunction with appendMoves and childMoves to create 3-4 level depth of moves
