@@ -49,7 +49,7 @@ class Knight {
         return moves;
     }
 
-    appendMoves(pos, counter = 0) {
+    appendMoves(pos, prev, counter = 0) {
         if (counter >= 3) {
             return;
         }
@@ -59,22 +59,19 @@ class Knight {
         counter++
 
         for (let i = 0; i < moves.length; i++) {
-            pos[`move${i}`] = new createMoves(moves[i]);
+            pos[`move${i}`] = new createMoves(moves[i], pos.position);
 
             if(pos[`move${i}`].move0 == undefined) {
-                this.appendMoves(pos[`move${i}`], counter);
+                this.appendMoves(pos[`move${i}`], pos.position, counter);
             }
         }
-
-        // This is the last of the line and pos[`move${i}`] is basically the end of our tree
-        // We need to find a way to continue this side of things to add onto our tree
     }
 
     // Takes given position and appends all moves to its children
     childMoves(node) {
         for(let i = 0; i < 8; i++) {
             if(node[`move${i}`] !== undefined) {
-                this.appendMoves(node[`move${i}`]);
+                this.appendMoves(node[`move${i}`], node[`move${i}`].position);
             } else {
                 return;
             }
@@ -82,35 +79,31 @@ class Knight {
 
     }
     
-    // Use this function in conjunction with appendMoves and childMoves to create 3-4 level depth of moves
-    makeTree(node, depth, counter = -1, moves) {
-        
+
+    makeTree(node, moves, counter = -1) {
+        if (node == undefined) {
+            return;
+        }
 
         moves = this.possibleMoves(node.position).length;
         
-        // Moves become reassigned a length value for our for loop to
-        // discover the correct amount of moves within our ' node ' variable
-        if (counter < depth) {
-            this.appendMoves(node);
-            this.childMoves(node);
+        if (node.moves0 == undefined) {
+            this.appendMoves(node, node.position);
         }
         
         for (let i = 0; i < moves; i++) {
-            this.childMoves(node[`move${i}`]);
+            this.childMoves(node);
         }
 
         counter++
-
-        if (counter < depth) {
-            // Recursively calls on each move of our initial start position.
-            return this.makeTree(node = test[`move${counter}`], depth, counter, moves);
-        }
+        return this.makeTree(node = test[`move${counter}`], moves, counter);
     }
 }
 
 class createMoves {
-    constructor(position, move0, move1, move2, move3, move4, move5, move6, move7) {
+    constructor(position, previous, move0, move1, move2, move3, move4, move5, move6, move7) {
         this.position = position;
+        this.previous= previous;
         this.move0 = move0;
         this.move1 = move1;
         this.move2 = move2;
@@ -125,7 +118,6 @@ class createMoves {
 let test = new Knight([7, 1], [3, 3], [7, 1]);
 let test2 = new createMoves();
 
-let depth = test.possibleMoves(test.position).length;
-test.makeTree(test, depth);
+test.makeTree(test);
 console.log(test)
 
