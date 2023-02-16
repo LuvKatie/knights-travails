@@ -1,8 +1,9 @@
 import '../styles/main.css'
 class Knight {
 
-    constructor(position, move0, move1, move2, move3, move4, move5, move6, move7) {
+    constructor(position, path, move0, move1, move2, move3, move4, move5, move6, move7) {
         this.position = position;
+        this.path = path;
         this.move0 = move0;
         this.move1 = move1;
         this.move2 = move2;
@@ -95,7 +96,7 @@ class Knight {
         }
 
         counter++
-        return this.makeTree(node = test[`move${counter}`], moves, counter);
+        return this.makeTree(node = startTree[`move${counter}`], moves, counter);
     }
 
     findShortest(start, end, depth, counter = 0, allMoves = [], shortestMoves = []) {
@@ -112,16 +113,11 @@ class Knight {
                 return a.length - b.length;
             });
             allMoves.forEach(move => {
-                if (move.length == move[0].length) {
-                    if (shortestMoves.includes(move)) {
-                        return;
-                    }
+                if (move.length == move[0].length && !(shortestMoves.includes(move))) {
                     shortestMoves.push(move);
-                    console.log(shortestMoves);
-                    console.log(end.position);
-                } else {
-                    return;
+                    this.path = shortestMoves;
                 }
+                return;
             });
         }
         
@@ -164,13 +160,15 @@ class createMoves {
     }
 }
 
-let test = new Knight([7, 1]);
-let test2 = new Knight([1, 2]);
+let startTree = new Knight([7, 1]);
+let target = new Knight([1, 2]);
 
-test.makeTree(test);
-test2.appendMoves(test2, 1);
+startTree.makeTree(startTree);
+target.appendMoves(target, 1);
+target.findShortest(startTree, target, 5);
 
-console.log(test)
-console.log(test2.possibleMoves(test2.position));
-test2.findShortest(test, test2, 5);
+console.log("Start position: ", startTree.position);
+console.log("Target position: ", target.position);
+console.log(target.possibleMoves(target.position));
+console.log(target.path);
 
