@@ -1,9 +1,7 @@
 import '../styles/main.css'
 class Knight {
 
-    constructor(start, end, position, move0, move1, move2, move3, move4, move5, move6, move7) {
-        this.start = start;
-        this.end = end;
+    constructor(position, move0, move1, move2, move3, move4, move5, move6, move7) {
         this.position = position;
         this.move0 = move0;
         this.move1 = move1;
@@ -49,7 +47,7 @@ class Knight {
         return moves;
     }
 
-    appendMoves(pos, prev, counter = 0) {
+    appendMoves(pos, counter = 0) {
         if (counter >= 3) {
             return;
         }
@@ -62,7 +60,7 @@ class Knight {
             pos[`move${i}`] = new createMoves(moves[i], pos.position);
 
             if(pos[`move${i}`].move0 == undefined) {
-                this.appendMoves(pos[`move${i}`], pos.position, counter);
+                this.appendMoves(pos[`move${i}`], counter);
             }
         }
     }
@@ -71,7 +69,7 @@ class Knight {
     childMoves(node) {
         for(let i = 0; i < 8; i++) {
             if(node[`move${i}`] !== undefined) {
-                this.appendMoves(node[`move${i}`], node[`move${i}`].position);
+                this.appendMoves(node[`move${i}`]);
             } else {
                 return;
             }
@@ -88,7 +86,7 @@ class Knight {
         moves = this.possibleMoves(node.position).length;
         
         if (node.moves0 == undefined) {
-            this.appendMoves(node, node.position);
+            this.appendMoves(node);
         }
         
         for (let i = 0; i < moves; i++) {
@@ -115,9 +113,11 @@ class createMoves {
     }
 }
 
-let test = new Knight([7, 1], [3, 3], [7, 1]);
-let test2 = new createMoves();
+let test = new Knight([7, 1]);
+let test2 = new Knight([3, 3]);
 
 test.makeTree(test);
+test2.makeTree(test2);
 console.log(test)
+console.log(test2)
 
