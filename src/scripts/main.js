@@ -47,20 +47,21 @@ class Knight {
         return moves;
     }
 
-    appendMoves(pos, counter = 0) {
-        if (counter >= 3) {
+    // stopper parameter allows us to control the depth
+    appendMoves(pos, stopper, depth = 0) {
+        if (depth >= 6 || depth == stopper) {
             return;
         }
 
         let moves = this.possibleMoves(pos.position);
 
-        counter++
+        depth++
 
         for (let i = 0; i < moves.length; i++) {
-            pos[`move${i}`] = new createMoves(moves[i], pos.position);
+            pos[`move${i}`] = new createMoves(moves[i], pos);
 
             if(pos[`move${i}`].move0 == undefined) {
-                this.appendMoves(pos[`move${i}`], counter);
+                this.appendMoves(pos[`move${i}`], stopper, depth);
             }
         }
     }
@@ -96,6 +97,41 @@ class Knight {
         counter++
         return this.makeTree(node = test[`move${counter}`], moves, counter);
     }
+
+    findShortest(start, end, depth, counter = 0) {
+        if (counter >= depth) {
+            return;
+        }
+        
+        
+        let newMoves = this.possibleMoves(end.position).join(' ');
+        if (newMoves.includes(start.position[0] + ',' + start.position[1])) {
+            console.log(this.checkSteps(start));
+            return;
+        }
+        
+        counter++
+        
+        for (let i = 0; i < 8; i++) {
+            if (start[`move${i}`] !== undefined) {
+                this.findShortest(start[`move${i}`], end, depth, counter);
+            } else {
+                return;
+            }
+        }
+    }
+
+    checkSteps(start, stepArr = [], count = 0) {
+        if (start.previous == null || start.previous == undefined) {
+            return stepArr;
+        }
+
+        stepArr.push(start);
+
+        count++
+
+        return this.checkSteps(start = start.previous, stepArr, count)
+    }
 }
 
 class createMoves {
@@ -114,10 +150,12 @@ class createMoves {
 }
 
 let test = new Knight([7, 1]);
-let test2 = new Knight([3, 3]);
+let test2 = new Knight([1, 2]);
 
 test.makeTree(test);
-test2.makeTree(test2);
+test2.appendMoves(test2, 1);
+
 console.log(test)
-console.log(test2)
+console.log(test2.possibleMoves(test2.position));
+test2.findShortest(test, test2, 5)
 
