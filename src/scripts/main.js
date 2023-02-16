@@ -98,39 +98,43 @@ class Knight {
         return this.makeTree(node = test[`move${counter}`], moves, counter);
     }
 
-    findShortest(start, end, depth, counter = 0) {
+    findShortest(start, end, depth, counter = 0, stepCompare) {
         if (counter >= depth) {
             return;
         }
         
         
-        let newMoves = this.possibleMoves(end.position).join(' ');
+        let moveString = this.possibleMoves(end.position).join(' ');
+        let newMoves = moveString.split(" ");
         if (newMoves.includes(start.position[0] + ',' + start.position[1])) {
-            console.log(this.checkSteps(start));
-            return;
+            console.log(start.position[0] + ',' + start.position[1]);
+            stepCompare = this.checkSteps(start);
+            if (stepCompare !== undefined) {
+                console.log("Step 1: ", stepCompare)
+                console.log("Step 2: ", this.checkSteps(start))
+            }
         }
+
         
         counter++
         
         for (let i = 0; i < 8; i++) {
             if (start[`move${i}`] !== undefined) {
-                this.findShortest(start[`move${i}`], end, depth, counter);
+                this.findShortest(start[`move${i}`], end, depth, counter, stepCompare);
             } else {
                 return;
             }
         }
     }
 
-    checkSteps(start, stepArr = [], count = 0) {
+    checkSteps(start, end, stepArr = []) {
         if (start.previous == null || start.previous == undefined) {
             return stepArr;
         }
 
-        stepArr.push(start);
-
-        count++
-
-        return this.checkSteps(start = start.previous, stepArr, count)
+        stepArr.push(start.position);
+        
+        return this.checkSteps(start = start.previous, end, stepArr)
     }
 }
 
