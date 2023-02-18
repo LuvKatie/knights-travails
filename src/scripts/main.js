@@ -14,6 +14,12 @@ class Knight {
         this.move7 = move7;
     }
 
+    buildPath() {
+        this.path.push(startTree.position)
+        this.path.unshift(target.position)
+        this.path = this.path.reverse()
+    }
+
     possibleMoves(pos) {
         // The spaces between each possible move for a Knight
         let ones = [-1, 1];
@@ -103,6 +109,7 @@ class Knight {
         if (counter == depth) {
             return;
         }
+
         
         let moveString = this.possibleMoves(end.position).join(' ');
         let newMoves = moveString.split(" ");
@@ -112,13 +119,7 @@ class Knight {
             allMoves.sort((a, b) => {
                 return a.length - b.length;
             });
-            allMoves.forEach(move => {
-                if (move.length == move[0].length && !(shortestMoves.includes(move))) {
-                    shortestMoves.push(move);
-                    this.path = shortestMoves;
-                }
-                return;
-            });
+            this.path = allMoves[0];
         }
         
         
@@ -160,15 +161,16 @@ class createMoves {
     }
 }
 
-let startTree = new Knight([7, 1]);
-let target = new Knight([1, 2]);
+let startTree = new Knight([0, 0]);
+let target = new Knight([7, 7]);
 
 startTree.makeTree(startTree);
 target.appendMoves(target, 1);
-target.findShortest(startTree, target, 5);
+target.findShortest(startTree, target, 10);
+target.buildPath()
 
 console.log("Start position: ", startTree.position);
 console.log("Target position: ", target.position);
 console.log("Target's possible moves: ", target.possibleMoves(target.position));
-console.log(`You made it in ${target.path[0].length} moves! Here are the shortest possible paths: `, target.path);
+console.log(`You made it in ${target.path.length} moves! Here are the shortest possible paths: `, target.path);
 
